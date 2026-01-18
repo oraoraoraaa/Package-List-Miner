@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: crates-miner
-Version: 1.0.1
+Version: 1.0.2
 Summary: Mine and extract complete package lists from crates.io registry
 Author-email: Rinalic <rinalic39@gmail.com>
 License: MIT
@@ -26,113 +26,55 @@ Requires-Dist: pandas>=1.5.0
 
 # Crates.io Package Miner
 
-This tool downloads and processes the complete crates.io database dump to extract Rust package information for cross-ecosystem analysis.
+A Python tool to mine and extract complete package lists from the crates.io (Rust) registry.
 
 ## Features
 
-- Downloads the official crates.io database dump
-- Extracts package metadata (ID, name, homepage, repository)
-- Formats data for cross-ecosystem package analysis
+- Downloads official crates.io database dump (~1000 MB)
+- Extracts package metadata including homepage and repository URLs
 - Progress tracking with visual feedback
 - Automatic cleanup of temporary files
-- Generates standardized CSV output compatible with Package-Filter
+- Outputs standardized CSV format for cross-ecosystem analysis
 
-## Setup
-
-### Run the setup script
+## Installation
 
 ```bash
-chmod +x setup.sh
-./setup.sh
+pip install crates-miner
 ```
 
-This will:
-
-- Create a virtual environment
-- Install required dependencies (requests, pandas, tqdm)
-- Prepare the environment for mining
-
-### Manual Setup (Alternative)
-
-If you prefer to set up manually:
+## Quick Start
 
 ```bash
-# Create virtual environment
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+crates-miner
 ```
 
-**Important**: Virtual environments contain hardcoded paths and **cannot be moved** after creation. If you need to relocate this script:
+Or use as a Python module:
 
-1. Delete the `venv` folder
-2. Recreate it in the new location
-3. Reinstall the packages
-
-## Usage
-
-Mine all crates from the crates.io database:
-
-```bash
-source venv/bin/activate
-python mine_crates.py
+```python
+from crates_miner import mine_crates
+mine_crates()
 ```
 
-Or run directly without activating:
+## Output
 
-```bash
-venv/bin/python mine_crates.py
-```
+Generates a CSV file with crate information:
+- Package ID, Platform, Name
+- Homepage URL, Repository URL
 
-The script will:
+## Performance
 
-1. Download the crates.io database dump (~1000+ MB)
-2. Extract the archive
-3. Process crate metadata
-4. Generate CSV output in `Resource/Package/Package-List/Crates_New.csv`
-5. Clean up temporary files
+- Runtime: Fast (depends on download speed)
+- No API rate limits (uses database dump)
+- Processes ~100,000+ crates
+- Download size: ~1000 MB compressed
 
-### What Gets Downloaded
+## Data Source
 
-- **Source**: `https://static.crates.io/db-dump.tar.gz`
-- **Size**: ~1000 MB (compressed)
-- **Contents**: Complete crates.io database snapshot
-- **Format**: TAR.GZ archive containing CSV files
+- Crates.io Database Dump: https://static.crates.io/db-dump.tar.gz
 
-## Input Format
+## License
 
-The crates.io database dump contains several CSV files. This script uses `crates.csv` which includes:
-
-- `id`: Unique crate identifier
-- `name`: Crate name
-- `homepage`: Homepage URL (may be empty)
-- `repository`: Source code repository URL (may be empty)
-- Additional metadata (description, downloads, etc.)
-
-## Output Format
-
-The script generates `Crates_New.csv` in the `Resource/Package/Package-List/` directory with the following structure:
-
-```csv
-ID,Platform,Name,Homepage URL,Repository URL
-1,Crates.io,rand,https://rust-random.github.io/book,https://github.com/rust-random/rand
-2,Crates.io,serde,https://serde.rs,https://github.com/serde-rs/serde
-3,Crates.io,tokio,https://tokio.rs,https://github.com/tokio-rs/tokio
-```
-
-### Column Descriptions
-
-- **ID**: Sequential identifier (1, 2, 3, ...)
-- **Platform**: Always "Crates.io" for Rust packages
-- **Name**: Crate name as registered on crates.io
-- **Homepage URL**: Project homepage (from crate metadata)
-- **Repository URL**: Source code repository URL (typically GitHub)
-
-**Note**: This format is compatible with the Package-Filter tool for cross-ecosystem analysis.
+MIT License - see LICENSE file for details
 
 ## Processing Details
 

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: php-miner
-Version: 1.0.1
+Version: 1.0.2
 Summary: Mine and extract complete package lists from Packagist/Composer registry
 Author-email: Rinalic <rinalic39@gmail.com>
 License: MIT
@@ -25,113 +25,55 @@ Requires-Dist: tqdm>=4.66.0
 
 # PHP/Packagist Miner
 
-This tool downloads and processes the Packagist.org package list to extract PHP package information for cross-ecosystem analysis.
+A Python tool to mine and extract complete package lists from the Packagist (Composer) registry.
 
 ## Features
 
-- Downloads package list from Packagist.org
-- Fetches detailed metadata via Packagist API
-- Extracts package metadata (ID, name, homepage, repository)
-- Formats data for cross-ecosystem package analysis
+- Downloads all ~400,000 PHP packages from Packagist.org
+- Fetches package metadata including homepage and repository URLs
+- Rate-limited API calls to respect server resources (20 req/sec)
 - Progress tracking with visual feedback
-- Rate-limited API calls to respect server resources
-- Generates standardized CSV output compatible with Package-Filter
+- Outputs standardized CSV format for cross-ecosystem analysis
 
-## Setup
-
-### Run the setup script
+## Installation
 
 ```bash
-chmod +x setup.sh
-./setup.sh
+pip install php-miner
 ```
 
-This will:
-
-- Create a virtual environment
-- Install required dependencies (requests, tqdm)
-- Prepare the environment for mining
-
-### Manual Setup (Alternative)
-
-If you prefer to set up manually:
+## Quick Start
 
 ```bash
-# Create virtual environment
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+php-miner
 ```
 
-**Important**: Virtual environments contain hardcoded paths and **cannot be moved** after creation. If you need to relocate this script:
+Or use as a Python module:
 
-1. Delete the `venv` folder
-2. Recreate it in the new location
-3. Reinstall the packages
-
-## Usage
-
-Mine all PHP packages from Packagist.org:
-
-```bash
-source venv/bin/activate
-python mine_php.py
+```python
+from php_miner import mine_php
+mine_php()
 ```
 
-Or run directly without activating:
+## Output
 
-```bash
-venv/bin/python mine_php.py
-```
+Generates a CSV file with package information:
+- Package ID, Platform, Name (vendor/package format)
+- Homepage URL, Repository URL
 
-The script will:
+## Performance
 
-1. Download the list of all package names from Packagist.org
-2. Fetch detailed information for each package via API
-3. Generate CSV output in `Resource/Package/Package-List/PHP_New.csv`
+- Runtime: 5-6 hours for complete dataset
+- Rate limit: 20 requests per second
+- Processes ~400,000 packages
 
-### Data Sources
+## Data Source
 
-- **Package Names**: https://packagist.org/packages/list.json
-- **Package Details**: https://packagist.org/packages/{vendor}/{package}.json
-- **Format**: JSON
+- Packagist Package List: https://packagist.org/packages/list.json
+- Package Details: https://packagist.org/packages/{vendor}/{package}.json
 
-## Output Format
+## License
 
-The script generates `PHP_New.csv` in the `Resource/Package/Package-List/` directory with the following structure:
-
-```csv
-ID,Platform,Name,Homepage URL,Repository URL
-1,Packagist,symfony/symfony,https://symfony.com,https://github.com/symfony/symfony
-2,Packagist,laravel/framework,https://laravel.com,https://github.com/laravel/framework
-3,Packagist,guzzlehttp/guzzle,https://guzzlephp.org,https://github.com/guzzle/guzzle
-```
-
-### Column Descriptions
-
-- **ID**: Sequential identifier (1, 2, 3, ...)
-- **Platform**: Always "Packagist" for PHP packages
-- **Name**: Package name as registered on Packagist.org (vendor/package format)
-- **Homepage URL**: Project homepage (from package metadata)
-- **Repository URL**: Source code repository URL
-
-**Note**: This format is compatible with the Package-Filter tool for cross-ecosystem analysis.
-
-## Processing Details
-
-### API Rate Limiting
-
-The script implements rate limiting to avoid overwhelming the Packagist API:
-
-- **Rate**: 20 requests per second (0.05 second delay between requests)
-- **Purpose**: Respectful API usage, avoiding server load
-- **Impact**: Processing time increases with number of packages
-
-**Estimated Time**: With ~400,000 packages and 20 req/sec, expect ~5-6 hours total runtime.
+MIT License - see LICENSE file for details
 
 ### Package Naming Convention
 

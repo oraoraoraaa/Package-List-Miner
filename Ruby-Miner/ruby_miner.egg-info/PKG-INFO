@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ruby-miner
-Version: 1.0.1
+Version: 1.0.2
 Summary: Mine and extract complete package lists from RubyGems registry
 Author-email: Rinalic <rinalic39@gmail.com>
 License: MIT
@@ -25,115 +25,55 @@ Requires-Dist: tqdm>=4.66.0
 
 # Ruby Gems Miner
 
-This tool downloads and processes the RubyGems.org package list to extract Ruby gem information for cross-ecosystem analysis.
+A Python tool to mine and extract complete package lists from the RubyGems registry.
 
 ## Features
 
-- Downloads gem list from RubyGems.org
-- Fetches detailed metadata via RubyGems API
-- Extracts package metadata (ID, name, homepage, repository)
-- Formats data for cross-ecosystem package analysis
+- Downloads all ~180,000 Ruby gems from RubyGems.org
+- Fetches package metadata including homepage and repository URLs
+- Rate-limited API calls to respect server resources (10 req/sec)
 - Progress tracking with visual feedback
-- Rate-limited API calls to respect server resources
-- Generates standardized CSV output compatible with Package-Filter
+- Outputs standardized CSV format for cross-ecosystem analysis
 
-## Setup
-
-### Run the setup script
+## Installation
 
 ```bash
-chmod +x setup.sh
-./setup.sh
+pip install ruby-miner
 ```
 
-This will:
-
-- Create a virtual environment
-- Install required dependencies (requests, tqdm)
-- Prepare the environment for mining
-
-### Manual Setup (Alternative)
-
-If you prefer to set up manually:
+## Quick Start
 
 ```bash
-# Create virtual environment
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+ruby-miner
 ```
 
-**Important**: Virtual environments contain hardcoded paths and **cannot be moved** after creation. If you need to relocate this script:
+Or use as a Python module:
 
-1. Delete the `venv` folder
-2. Recreate it in the new location
-3. Reinstall the packages
-
-## Usage
-
-Mine all Ruby gems from RubyGems.org:
-
-```bash
-source venv/bin/activate
-python mine_ruby.py
+```python
+from ruby_miner import mine_ruby
+mine_ruby()
 ```
 
-Or run directly without activating:
+## Output
 
-```bash
-venv/bin/python mine_ruby.py
-```
+Generates a CSV file with gem information:
+- Package ID, Platform, Name
+- Homepage URL, Repository URL
 
-The script will:
+## Performance
 
-1. Download the compact specs file (specs.4.8.gz)
-2. Download the list of all gem names from RubyGems.org
-3. Fetch detailed information for each gem via API
-4. Generate CSV output in `Resource/Package/Package-List/Ruby_New.csv`
-5. Clean up temporary files
+- Runtime: ~5 hours for complete dataset
+- Rate limit: 10 requests per second
+- Processes ~180,000 gems
 
-### Data Sources
+## Data Source
 
-- **Gem Names**: http://rubygems.org/names
-- **Gem Details**: https://rubygems.org/api/v1/gems/{name}.json
-- **Format**: Plain text list (names) and JSON (details)
+- Gem Names: http://rubygems.org/names
+- Gem Details: https://rubygems.org/api/v1/gems/{name}.json
 
-## Output Format
+## License
 
-The script generates `Ruby_New.csv` in the `Resource/Package/Package-List/` directory with the following structure:
-
-```csv
-ID,Platform,Name,Homepage URL,Repository URL
-1,RubyGems,rails,https://rubyonrails.org,https://github.com/rails/rails
-2,RubyGems,devise,https://github.com/heartcombo/devise,https://github.com/heartcombo/devise
-3,RubyGems,rake,https://github.com/ruby/rake,https://github.com/ruby/rake
-```
-
-### Column Descriptions
-
-- **ID**: Sequential identifier (1, 2, 3, ...)
-- **Platform**: Always "RubyGems" for Ruby packages
-- **Name**: Gem name as registered on RubyGems.org
-- **Homepage URL**: Project homepage (from gem metadata)
-- **Repository URL**: Source code repository URL
-
-**Note**: This format is compatible with the Package-Filter tool for cross-ecosystem analysis.
-
-## Processing Details
-
-### API Rate Limiting
-
-The script implements rate limiting to avoid overwhelming the RubyGems API:
-
-- **Rate**: 10 requests per second (0.1 second delay between requests)
-- **Purpose**: Respectful API usage, avoiding server load
-- **Impact**: Processing time increases with number of gems
-
-**Estimated Time**: With ~180,000 gems and 10 req/sec, expect ~5 hours total runtime.
+MIT License - see LICENSE file for details
 
 ### Gem Metadata Sources
 
