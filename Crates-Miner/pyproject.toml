@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "crates-miner"
-version = "1.0.1"
+version = "1.0.2"
 description = "Mine and extract complete package lists from crates.io registry"
 readme = "README.md"
 requires-python = ">=3.8"
