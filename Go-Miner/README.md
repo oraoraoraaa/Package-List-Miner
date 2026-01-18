@@ -1,166 +1,61 @@
 # Go Package Miner
 
-This tool downloads and processes the Go module index to extract Go package information for cross-ecosystem analysis.
+A Python tool to mine and extract complete package lists from the Go modules registry.
 
 ## Features
 
-- Downloads module list from the official Go module index (index.golang.org)
-- Extracts package metadata (ID, name, homepage, repository)
-- Retrieves repository URLs from Go proxy API Origin field (no inference)
-- Formats data for cross-ecosystem package analysis
-- **Advanced progress tracking with detailed statistics**
-- **Checkpoint system** - Resume interrupted downloads automatically
-- **Optimized connection pooling** for faster downloads
-- **Automatic retry mechanism** for failed requests
-- **Customizable output directory and filename** via command-line arguments
-- Generates standardized CSV output compatible with Package-Filter
-- No API rate limits (uses official public index)
+- Downloads all ~5.7 million Go modules from index.golang.org
+- Extracts repository URLs from Go proxy API Origin field
+- Optimized connection pooling for faster downloads
+- Checkpoint system for resumable downloads
+- Progress tracking with detailed statistics
+- Outputs standardized CSV format for cross-ecosystem analysis
 
-## Setup
-
-### Run the setup script
+## Installation
 
 ```bash
-chmod +x setup.sh
-./setup.sh
+pip install go-miner
 ```
 
-This will:
-
-- Create a virtual environment
-- Install required dependencies (requests, tqdm)
-- Prepare the environment for mining
-
-### Manual Setup (Alternative)
-
-If you prefer to set up manually:
+## Quick Start
 
 ```bash
-# Create virtual environment
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+go-miner
 ```
 
-**Important**: Virtual environments contain hardcoded paths and **cannot be moved** after creation. If you need to relocate this script:
+Or use as a Python module:
 
-1. Delete the `venv` folder
-2. Recreate it in the new location
-3. Reinstall the packages
-
-## Usage
-
-### Basic Usage
-
-Mine all Go modules from the index with default settings:
-
-```bash
-source venv/bin/activate
-python mine_go.py
+```python
+from go_miner import mine_go
+mine_go()
 ```
 
-Or run directly without activating:
+## Output
 
-```bash
-venv/bin/python mine_go.py
-```
+Generates a CSV file with module information:
+- Package ID, Platform, Name (full module path)
+- Homepage URL, Repository URL
 
-### Custom Output Options
+## Performance
 
-Specify custom output directory:
+- Runtime: 6-10 minutes for complete dataset
+- Processes ~8,000 batches (2000 entries each)
+- Memory usage: ~500-800 MB
 
-```bash
-python mine_go.py --output-dir /path/to/output
-```
+## Features
 
-Specify custom filename:
+- **Resume Support**: Automatically resumes from interruptions
+- **No Rate Limits**: Uses official public index with no authentication
+- **Fast Processing**: Connection pooling and batch processing
 
-```bash
-python mine_go.py --output-file custom_modules.csv
-```
+## Data Source
 
-Both directory and filename:
+- Go Module Index: https://index.golang.org/index
+- Go Proxy API: https://proxy.golang.org
 
-```bash
-python mine_go.py -o ./data -f go_packages.csv
-```
+## License
 
-View all options:
-
-```bash
-python mine_go.py --help
-```
-
-### How It Works
-
-The script will:
-
-1. Download the Go module index from index.golang.org using pagination
-2. Fetch modules in batches (up to 2000 per request)
-3. Parse module entries (path, version, timestamp)
-4. Extract unique module paths (deduplicating versions)
-5. **Save checkpoints every 1000 batches** for resume capability
-6. Fetch repository URLs from Go proxy API (when available)
-7. Generate CSV output (default: `Resource/Package/Package-List/Go_New.csv`)
-
-### Resume from Interruption
-
-If the download is interrupted (Ctrl+C or network failure), simply run the script again:
-
-```bash
-python mine_go.py
-```
-
-The script will automatically detect the checkpoint file and resume from where it left off.
-
-### Data Source
-
-- **Source**: https://index.golang.org/index
-- **Format**: Newline-delimited JSON with pagination
-- **Contents**: All Go modules with versions and timestamps
-- **Pagination**: Uses `since` parameter to fetch all modules in batches
-- **Total Modules**: ~5.7 million+ unique modules (as of November 2025)
-- **Total Entries**: ~16 million+ (including all versions)
-- **Processing Time**: ~6-10 minutes with optimized fetching
-- **Batches**: ~8,000 batches (2000 entries each)
-
-## Output Format
-
-The script generates `Go_New.csv` in the `Resource/Package/Package-List/` directory with the following structure:
-
-```csv
-ID,Platform,Name,Homepage URL,Repository URL
-1,Go,github.com/gorilla/mux,https://github.com/gorilla/mux,https://github.com/gorilla/mux
-2,Go,github.com/gin-gonic/gin,https://github.com/gin-gonic/gin,https://github.com/gin-gonic/gin
-3,Go,golang.org/x/sys,https://golang.org/x/sys,https://golang.org/x/sys
-```
-
-### Column Descriptions
-
-- **ID**: Sequential identifier (1, 2, 3, ...)
-- **Platform**: Always "Go" for Go packages
-- **Name**: Full module path (e.g., github.com/user/repo)
-- **Homepage URL**: Retrieved from Go proxy API Origin field ("nan" if unavailable)
-- **Repository URL**: Retrieved from Go proxy API Origin field ("nan" if unavailable)
-
-**Note**: This format is compatible with the Package-Filter tool for cross-ecosystem analysis.
-
-## Data Source and Availability
-
-Repository URLs are retrieved from the Go proxy API's `Origin` field. Note that:
-
-- **Modern modules** (Go 1.13+): Usually include Origin metadata with repository URL
-- **Older modules**: May not have Origin data in the API response
-- **When unavailable**: Values are set to "nan" (no inference or guessing)
-
-Example modules:
-
-- `github.com/logbull/logbull-go` - ✅ Has Origin data
-- `gopkg.in/yaml.v3` - ❌ No Origin data (returns "nan")
+MIT License - see LICENSE file for details
 
 ## Processing Details
 
