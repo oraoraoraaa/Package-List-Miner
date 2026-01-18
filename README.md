@@ -1,6 +1,6 @@
 # Package-List-Miner
 
-Automated data mining scripts for extracting complete package lists from major software ecosystem registries. Each miner fetches package metadata including names, versions, descriptions, authors, licenses, and repository URLs.
+Automated data mining scripts for extracting complete package lists from major software ecosystem registries. Each miner fetches package metadata including names, authors, homepage urls, and repository urls. All miners output in the same csv format so that later-on scripts can easily operate on all of them with one input format standard.
 
 ## Supported Ecosystems
 
