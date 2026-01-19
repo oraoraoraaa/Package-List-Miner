@@ -80,12 +80,12 @@ if [ $? -eq 0 ]; then
     echo "=================================="
     echo
     echo "Executable JAR created at:"
-    echo "  target/maven-miner-1.0.0-jar-with-dependencies.jar"
+    echo "  target/maven-miner-1.0.1-jar-with-dependencies.jar"
     echo
     echo "To run the miner:"
     echo "  ./run.sh"
     echo "  or"
-    echo "  java -jar target/maven-miner-1.0.0-jar-with-dependencies.jar"
+    echo "  java -jar target/maven-miner-1.0.1-jar-with-dependencies.jar"
     echo
 else
     echo
