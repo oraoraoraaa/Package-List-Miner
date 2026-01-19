@@ -28,9 +28,14 @@ mine_php()
 
 ## Output
 
-**Location:** `../../../Resource/Package/Package-List/PHP_New.csv`
+**Location:** `../Package-List/PHP.csv`
+
+The output file will be stored in a folder named "Package-List" _in your current working directory_.
+
+If you are using a virtual environment, "Package-List" will be located where `venv` is installed.
 
 **Format:** CSV file with columns:
+
 - ID (sequential number)
 - Platform (always "Packagist")
 - Name (vendor/package format)

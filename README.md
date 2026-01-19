@@ -91,6 +91,10 @@ php-miner     # For PHP
 ruby-miner    # For Ruby
 ```
 
+The output file will be stored in a folder named "Package-List" _in your current working directory_.
+
+If you are using a virtual environment, "Package-List" will be located where `venv` is installed.
+
 ### From Source
 
 Run any miner from its directory:

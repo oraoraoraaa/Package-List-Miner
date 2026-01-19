@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "php-miner"
-version = "1.0.3"
+version = "1.0.4"
 description = "Mine and extract complete package lists from Packagist/Composer registry"
 readme = "README.md"
 requires-python = ">=3.8"

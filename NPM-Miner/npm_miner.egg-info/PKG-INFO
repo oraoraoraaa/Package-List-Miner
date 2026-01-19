@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: npm-miner
-Version: 1.0.2
+Version: 1.0.4
 Summary: Mine and extract complete package lists from NPM registry
 Author-email: Rinalic <rinalic39@gmail.com>
 License: MIT
@@ -27,21 +27,13 @@ Requires-Dist: tqdm>=4.66.0
 
 A Python tool to mine and extract complete package lists from the NPM registry.
 
-## Features
-
-- Fetches all ~2-3 million NPM packages from the official registry
-- Retrieves package metadata including homepage and repository URLs
-- Parallel processing with 50 workers for efficient data collection
-- Progress tracking with visual feedback
-- Outputs standardized CSV format for cross-ecosystem analysis
-
 ## Installation
 
 ```bash
 pip install npm-miner
 ```
 
-## Quick Start
+## Usage
 
 ```bash
 npm-miner
@@ -54,23 +46,23 @@ from npm_miner import mine_npm
 mine_npm()
 ```
 
-## Output
-
-Generates a CSV file with package information:
-- Package ID, Platform, Name
-- Homepage URL, Repository URL
-
-## Performance
-
-- Runtime: 10-20 hours for complete dataset
-- Uses 50 parallel workers
-- Network-dependent processing speed
-
 ## Data Source
 
 - NPM Registry: https://registry.npmjs.org/
 - All packages: https://replicate.npmjs.com/_all_docs
 
-## License
+## Output
 
-MIT License - see LICENSE file for details
+**Location:** `../Package-List/NPM.csv`
+
+The output file will be stored in a folder named "Package-List" _in your current working directory_.
+
+If you are using a virtual environment, "Package-List" will be located where `venv` is installed.
+
+**Format:** CSV file with columns:
+
+- ID (sequential number)
+- Platform (always "NPM")
+- Name (package name)
+- Homepage URL
+- Repository URL
