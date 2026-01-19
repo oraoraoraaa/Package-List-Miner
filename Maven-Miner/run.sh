@@ -3,7 +3,7 @@
 
 set -e
 
-JAR_FILE="target/maven-miner-1.0.0-jar-with-dependencies.jar"
+JAR_FILE="target/maven-miner-1.0.1-jar-with-dependencies.jar"
 
 if [ ! -f "$JAR_FILE" ]; then
     echo "Error: JAR file not found: $JAR_FILE"
